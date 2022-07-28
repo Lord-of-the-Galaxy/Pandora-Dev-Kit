@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <title>Games | Pioneering Pandora</title>
+</head>
+<body>
+    <h2>List of games available</h2>
+    <ul>
+        {% for game_id in games %}
+        <li><a href="{{ url_for('game', game_id=game_id) }}" class="link-info">Game {{ game_id }}</a></li>
+        {% endfor %}
+    </ul>
+</body>

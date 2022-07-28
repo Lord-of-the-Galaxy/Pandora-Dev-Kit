@@ -1,0 +1,5 @@
+colorama
+Flask
+Flask-SocketIO
+numpy
+simple-websocket

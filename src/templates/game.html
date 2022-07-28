@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <title>Game {{ game_id }} | Pioneering Pandora</title>
+    <meta name="game_id" id="game_id" content="{{ game_id }}">
+    <script src="{{ url_for('static', filename='p5.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='socket.io.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='stopwatch.js') }}"></script>
+    <script src="{{ url_for('static', filename='auto_progress.js') }}"></script>
+    <script src="{{ url_for('static', filename='socket_handler.js') }}"></script>
+    <script src="{{ url_for('static', filename='sketch.js') }}"></script>
+    <script src="{{ url_for('static', filename='controls.js') }}"></script>
+    <script src="{{ url_for('static', filename='game.js') }}"></script>
+</head>
+<body>
+    <div id="game_canvas">
+    </div>
+</body>
