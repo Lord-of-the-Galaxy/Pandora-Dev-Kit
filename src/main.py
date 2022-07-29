@@ -14,7 +14,7 @@ def main():
     p2t = Player
     params = GameParams()
     g = Game(4, p1t, p2t, game_params=params, seed=100)
-    g.play(log=True, log_p=True)
+    g.play(log=True, log_p=False)
     g.player_1.close()
     g.player_2.close()
 

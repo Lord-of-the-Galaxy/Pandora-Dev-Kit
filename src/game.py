@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from dataclasses import asdict
 from random import Random
+import os
 
 import numpy as np
 import numpy.typing as npt
@@ -15,10 +16,10 @@ from action import Action
 from agent import Agent
 
 
-LOG_DIR = "./game_logs"
+LOG_DIR = os.path.join(os.getcwd(), 'game_logs')
 
 
-# noinspection PyPep8Naming,PyProtectedMember
+# noinspection PyPep8Naming
 class Game:
     """Class encapsulating a single game"""
 
