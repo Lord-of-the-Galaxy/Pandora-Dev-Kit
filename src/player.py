@@ -50,7 +50,14 @@ class Player(Agent):
 
     def move(self, time: int, game_map: npt.NDArray[object], p1_inv: Inventory, p2_inv: Inventory) -> list[Action]:
         try:
-            return self._move(time, game_map, p1_inv, p2_inv)
+            start_time = perf_counter_ns() // 1000  # microsecond accuracy enough for us and keeps numbers smaller
+
+            moves = self._move(time, game_map, p1_inv, p2_inv)
+
+            time_used = perf_counter_ns() // 1000 - start_time
+            self.time_logs[time] = time_used // 1000  # for final logging, millisecond accuracy suffices
+
+            return moves
         except Exception as e:
             print(Fore.RED + "Error" + Style.RESET_ALL)
             print(traceback.format_exc())
@@ -91,7 +98,7 @@ class Player(Agent):
     #                                       Miners can only build Bases and Turrets, and need to transfer cargo to
     #                                       the location in order to build (thus taking many turns)
     def _move(self, time: int, game_map: npt.NDArray[object], p1_inv: Inventory, p2_inv: Inventory) -> list[Action]:
-        start_time = perf_counter_ns() // 1000  # microsecond accuracy more than enough for us and keeps numbers smaller
+
         moves: dict[int, Action] = {}  # maps ids to moves
         p_inv = p1_inv if self.player == 1 else p2_inv
 
@@ -115,9 +122,6 @@ class Player(Agent):
             if num_miners < 20:  # 20 miners should be enough for us
                 a = Action(p_inv.bases[0]).build(Miner)
                 other_actions.append(a)
-
-        time_used = perf_counter_ns() // 1000 - start_time
-        self.time_logs[time] = time_used // 1000  # ms accuracy
 
         return list(moves.values()) + other_actions
 

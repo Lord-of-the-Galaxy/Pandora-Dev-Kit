@@ -22,8 +22,7 @@ class Action:
 
     def execute_move(self) -> Optional[str]:
         if isinstance(self.entity, Ship):
-            self.entity.move(self._move)
-            return self._move.value
+            return self.entity.move(self._move)
         return None
 
     def mine(self, direction: Direction = Direction.NONE):

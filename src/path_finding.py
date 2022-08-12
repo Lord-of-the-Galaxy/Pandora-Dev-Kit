@@ -10,7 +10,7 @@ import numpy.typing as npt
 from vec2 import vec2
 
 
-# A* code from: https://gist.github.com/ryancollingwood/32446307e976a11a1185a5394d6657bc
+# A* code adapted from: https://gist.github.com/ryancollingwood/32446307e976a11a1185a5394d6657bc
 # for Space-Time-A*, refer to: https://www.davidsilver.uk/wp-content/uploads/2020/03/coop-path-AIWisdom.pdf
 
 # I hope this works, it's not been tested much (or at all)

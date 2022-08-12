@@ -111,7 +111,7 @@ class Attacker(Entity, ABC):
                 attacks.append(ent)
         if len(attacks) == 0:
             return []
-        dmg = self.damage//len(attacks)
+        dmg = self.damage // len(attacks)
         for ent in attacks:
             ent.do_damage(dmg)
         return [ent.pos for ent in attacks]
@@ -143,14 +143,14 @@ class Ship(Entity, ABC):
             return True
         return False
 
-    def move(self, direction: Direction):
+    def move(self, direction: Direction) -> Optional[str]:
         if direction == Direction.NONE:
-            return  # nothing to move
+            return None  # nothing to move
         new_pos = self.pos + direction.vec
         if not ((0 <= new_pos.x < self.game_map.shape[0]) and (0 <= new_pos.y < self.game_map.shape[1])):
-            return  # we stay where we are
+            return None  # we stay where we are
         if isinstance(self.game_map[new_pos], ResourceDeposit):
-            return  # we stay where we are, can't move into a resource deposit
+            return None  # we stay where we are, can't move into a resource deposit
         # we only move out of our current position for now, and handle moving into the new position later
         self.new_pos = new_pos
         self.dir = direction  # update the direction we are facing in
@@ -160,6 +160,7 @@ class Ship(Entity, ABC):
         else:
             assert isinstance(mo, Building)  # this should never fail
             assert mo.remove_ship(self)  # this should never fail either
+        return direction.value
 
     def complete_move(self, collisions: set[vec2]):
         if self.new_pos in collisions and not isinstance(self.game_map[self.new_pos], Building):
@@ -241,7 +242,7 @@ class UnderConstruction(Building, desc='C'):
         d['b'] = self.building_type.desc
         progress = Resource.ORE.value * self.ore + Resource.FUEL.value * self.fuel
         total = Resource.ORE.value * self.total_ore_needed + Resource.FUEL.value * self.total_fuel_needed
-        d['m'] = round(progress/total, 2)
+        d['m'] = round(progress / total, 2)
         return d
 
     def build(self, resources: list[Resource]) -> list[Resource]:

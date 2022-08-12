@@ -38,6 +38,7 @@ class Direction(Enum):
 
     # this is completely, utterly useless, unnecessary, and probably evil
     # but PyCharm will complain without it (due to a bug)
+    # this will be fixed soon it seems, but I'm not sure when
     @property
     def value(self) -> str:
         return self._value_
