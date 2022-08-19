@@ -101,6 +101,7 @@ class Player(Agent):
 
         moves: dict[int, Action] = {}  # maps ids to moves
         p_inv = p1_inv if self.player == 1 else p2_inv
+        e_inv = p1_inv if self.player == 2 else p2_inv
 
         ships = p_inv.ships  # get a list of all ships
         for s in ships:  # create an action for every ship
@@ -110,7 +111,7 @@ class Player(Agent):
             if s.id in self.goals and s.pos == self.goals[s.id][0]:
                 self.handle_goal(s, game_map, moves[s.id], time)  # handle the goal
             if s.id not in self.goals:  # allot a goal to every ship that doesn't have one
-                self.allot_goal(s, p_inv, game_map, time)
+                self.allot_goal(s, p_inv, e_inv, game_map, time)
 
         # compute paths (if needed) and moves for all ships
         self.compute_paths_and_moves(ships, time, moves, game_map)
@@ -122,6 +123,11 @@ class Player(Agent):
             if num_miners < 20:  # 20 miners should be enough for us
                 a = Action(p_inv.bases[0]).build(Miner)
                 other_actions.append(a)
+            elif p_inv.ore >= self.params.fighters.ore_cost and p_inv.fuel >= self.params.fighters.fuel_cost:
+                num_fighters = len(p_inv.fighters)
+                if num_fighters < 10:  # 10 fighters should be enough for us
+                    a = Action(p_inv.bases[0]).build(Fighter)
+                    other_actions.append(a)
 
         return list(moves.values()) + other_actions
 
@@ -187,7 +193,7 @@ class Player(Agent):
         # finally cleanup old reservations
         cleanup_reservations(self.reserved, time)
 
-    def allot_goal(self, s: Ship, p_inv: Inventory, game_map: npt.NDArray[object], time: int):
+    def allot_goal(self, s: Ship, p_inv: Inventory, e_inv: Inventory, game_map: npt.NDArray[object], time: int):
         g = None
         p = 0
         if isinstance(s, Miner):
@@ -199,7 +205,10 @@ class Player(Agent):
                 g = p_inv.bases[0].pos  # we must have at least one base - we lose if we don't
                 p = 0
         elif isinstance(s, Fighter):
-            pass  # TODO: get the fighters to do something?
+            if len(p_inv.fighters) >= 6:  # only try to fight if we have at least 8 fighters
+                base = e_inv.bases[0]
+                g = self.find_attacking_spot(game_map, base.pos)
+                p = self.params.start.max_len
         if g is None:
             return
         self.goals[s.id] = (g, p)
@@ -223,6 +232,7 @@ class Player(Agent):
                 action.cargo([])
             else:  # right now the only other possibility is that the goal was to mine
                 action.mine()
+        # the fighters kinda just stay put and keep attacking as long as they're alive
 
     def find_mining_goal(self, game_map: npt.NDArray[object], pos: vec2) -> Optional[vec2]:
         # find the nearest mining spot to pos
@@ -237,6 +247,17 @@ class Player(Agent):
                     # we found something
                     return p
         return None  # hopefully never happens
+
+    def find_attacking_spot(self, game_map: npt.NDArray[object], base_pos: vec2) -> Optional[vec2]:
+        # find the nearest attacking spot to attack base
+        for d in range(1, self.w + self.h):
+            for p in at_distance(base_pos, d, self.w, self.h):
+                if p in self.all_goals:
+                    continue  # already a goal
+                if game_map[p] is not None:
+                    continue  # something is already there
+                return p
+        return None
 
     # this returns an array where each entry is the number of ships the corresponding position on the game_map can hold
     @staticmethod

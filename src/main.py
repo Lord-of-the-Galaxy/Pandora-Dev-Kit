@@ -2,6 +2,7 @@
 
 import colorama
 
+from agent import NullPlayer
 from game import Game
 from params import GameParams
 from player import Player

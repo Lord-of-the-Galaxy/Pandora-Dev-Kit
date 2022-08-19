@@ -145,7 +145,8 @@ class Game:
         attacks, destroyed = self.execute_attacks()
 
         if len(self.p1_inv.bases) == 0 or len(self.p2_inv.bases) == 0:
-            self.game_over = True  # someone lost all their bases
+            self.game_length = self.move_num  # someone lost all their bases, so the game must end
+            self.game_over = True
 
         # print(f"c - {collisions}, a - {attacks}, d - {destroyed}")
         return moves, collisions, attacks, destroyed

@@ -345,7 +345,7 @@ class Miner(Ship, Attacker, desc='M', attacks=(Ship,)):
         self.cargo = uc.build(self.cargo)
 
 
-class Fighter(Ship, Attacker, desc='F', attacks=(Entity,)):
+class Fighter(Ship, Attacker, desc='K', attacks=(Entity,)):
     def __init__(self, p_inv: Inventory, game_map: npt.NDArray[object], pos: vec2,
                  game_params: params.GameParams, **kwargs):
         super().__init__(p_inv, game_map, pos, game_params, **kwargs)  # fighters attack everything
